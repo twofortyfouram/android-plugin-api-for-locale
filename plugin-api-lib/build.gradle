@@ -1,0 +1,53 @@
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    compile group:'net.jcip', name:'jcip-annotations', version:'1.0'
+    compile group:'com.twofortyfouram', name:'android-annotation', version:'[1.0.2,2.0['
+}
+
+android {
+    compileSdkVersion Integer.parseInt(ANDROID_COMPILE_SDK_VERSION)
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion Integer.parseInt(ANDROID_MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(ANDROID_TARGET_SDK_VERSION)
+        versionCode Integer.parseInt(ANDROID_VERSION_CODE)
+        versionName ANDROID_VERSION_NAME
+        consumerProguardFiles 'proguard-consumer.txt'
+    }
+}
+
+android.libraryVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files) + files("${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+        options.linksOffline('http://developer.android.com/reference/', "${android.plugin.sdkDirectory}/docs/reference")
+        options.links('http://jcip.net.s3-website-us-east-1.amazonaws.com/annotations/doc/', 'http://twofortyfouram.github.io/android-annotation/')
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_URL) {
+                authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
+            }
+            pom.project {
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+            pom.groupId = MAVEN_GROUP
+            pom.version = ANDROID_VERSION_NAME
+            pom.artifactId = MAVEN_ARTIFACT_NAME
+        }
+    }
+}

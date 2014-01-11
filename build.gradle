@@ -1,0 +1,15 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group:'com.android.tools.build', name:'gradle', version:'[0.9.1,0.10['
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://dl.bintray.com/twofortyfouram/maven' }
+    }
+}
