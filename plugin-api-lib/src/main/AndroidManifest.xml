@@ -1,0 +1,13 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.twofortyfouram.locale.api"
+          android:versionCode="1"
+          android:versionName="1.0">
+
+    <uses-sdk
+            android:minSdkVersion="1"
+            android:targetSdkVersion="19"/>
+
+    <application tools:ignore="MissingApplicationIcon,AllowBackup"/>
+
+</manifest>
