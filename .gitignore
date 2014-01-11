@@ -1,0 +1,11 @@
+syntax: glob
+.crashlytics_data/
+.DS_Store
+.gradle/
+.settings
+.idea
+*.iml
+bin/
+build/
+gen/
+local.properties
