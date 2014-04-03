@@ -51,3 +51,15 @@ uploadArchives {
         }
     }
 }
+
+// Workaround for naming conflict between maven and android plugins
+// http://stackoverflow.com/questions/18559932/gradle-maven-plugin-install-task-does-not-work-with-android-library-project
+task installArchives(type: Upload) {
+    description "Installs artifacts to mavenLocal."
+    repositories.mavenInstaller {
+        configuration = configurations.default
+        pom.groupId = MAVEN_GROUP
+        pom.artifactId = MAVEN_ARTIFACT_NAME
+        pom.version = ANDROID_VERSION_NAME
+    }
+}
