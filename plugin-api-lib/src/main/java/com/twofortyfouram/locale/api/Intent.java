@@ -15,11 +15,11 @@
 
 package com.twofortyfouram.locale.api;
 
-import com.twofortyfouram.annotation.NonNull;
 
 import net.jcip.annotations.ThreadSafe;
 
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Contains Intent constants necessary for interacting with the plug-in API for Locale.

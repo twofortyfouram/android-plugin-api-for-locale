@@ -27,7 +27,7 @@ The build.gradle repositories section would look something like the following:
 And the dependencies section would look something like this:
     
     dependencies {
-             compile group:'com.twofortyfouram', name:'android-plugin-api-for-locale', version:'[1.0.0,2.0.0['
+             compile group:'com.twofortyfouram', name:'android-plugin-api-for-locale', version:'[1.0.1,2.0['
     }
 
 
@@ -88,7 +88,7 @@ Creating an Intent-based specification is complicated.  This section is intended
 1. [ACTION_FIRE_SETTING](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_FIRE_SETTING) and [ACTION_QUERY_CONDITION](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_QUERY_CONDITION) MAY be broadcast with the flag [FLAG_FROM_BACKGROUND](http://developer.android.com/reference/android/content/Intent.html#FLAG_FROM_BACKGROUND) when they are broadcast as the result of an automatic change in the host and not as a result of direct user interaction.
 1. [ACTION_FIRE_SETTING](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_FIRE_SETTING) and [ACTION_QUERY_CONDITION](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_QUERY_CONDITION) MUST be background priority Intents.  In other words, these Intents MUST NOT have the flag [FLAG_RECEIVER_FOREGROUND](http://developer.android.com/reference/android/content/Intent.html#FLAG_RECEIVER_FOREGROUND).
 1. [ACTION_FIRE_SETTING](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_FIRE_SETTING) MAY be sent as an ordered broadcast, if the host wishes to block until the setting completes.  In this case, the ordered broadcast result code and extras have no meaning.
-[ACTION_QUERY_CONDITION](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_QUERY_CONDITION)
+1. [ACTION_QUERY_CONDITION](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#ACTION_QUERY_CONDITION) MUST be sent as an ordered broadcast.
 1. All Intents MUST NOT contain data, flags, categories, source bounds, or any other fields in the Intent object not otherwise specified by this API.  Additional data, flags, categories, and other information are reserved for future use by the API.
 
 ### Client
@@ -129,6 +129,7 @@ Creating an Intent-based specification is complicated.  This section is intended
 1. The host MUST wrap the launch of the edit Intent in a try-catch block that catches both ActivityNotFoundException and SecurityException.  This prevents a number of TOCTOU (time of check to time of use) and security issues where a plug-in could be uninstalled just before it is launched or a malicious plug-in could even change its permissions right before launch.
 1. The host MUST start a plug-in Activity by calling [startActivityForResult(Intent, int)](http://developer.android.com/reference/android/app/Activity.html#startActivityForResult(android.content.Intent,%20int)).
 1. [EXTRA_BUNDLE](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#EXTRA_BUNDLE) MUST only be present if an old instance of the plug-in is being edited.  If [EXTRA_BUNDLE](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#EXTRA_BUNDLE) is present in the edit Intent, it MUST NOT be null.  It may be an empty Bundle however, if the plug-in previously returned an empty Bundle.
+1. [EXTRA_STRING_BLURB](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#EXTRA_STRING_BLURB) MUST only be present if an old instance of the plug-in is being edited.  If [EXTRA_STRING_BLURB](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#EXTRA_STRING_BLURB) is present in the edit Intent, it MUST NOT be null.
 
 #### Persist
 1. When a plug-in's Activity result code is RESULT_CANCELED, a host must treat this as a cancelation.  If a new plug-in instance was being edited, then the host does nothing.  If an old plug-in instance was being edited, the old plug-in instance MUST NOT be deleted.
@@ -146,3 +147,4 @@ Creating an Intent-based specification is complicated.  This section is intended
 1. A host MUST be able to store all data types returned from a plug-in, including sub-Bundles, null keys, null values, arrays, etc.  (With the exception of rejecting private serializable subclasses and Parcelable classes.)
 
 #### Execute
+1. An execute Intent for a condition MUST contain an initial result code in the set {[RESULT_CONDITION_SATISFIED](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNSATISFIED), [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN), [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN)}.  If the host knows the previous state of the condition, it SHOULD set the initial result code to that previous state, as this MAY be used by the plug-in to determine its initial value.  If the host does not know the previous state of the condition, it MUST set the initial result code to [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN).

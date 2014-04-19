@@ -4,7 +4,7 @@ apply plugin: 'maven'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile group:'net.jcip', name:'jcip-annotations', version:'1.0'
-    compile group:'com.twofortyfouram', name:'android-annotation', version:'[1.0.2,2.0['
+    compile group:'com.android.support', name:'support-annotations', version:'+'
 }
 
 android {
