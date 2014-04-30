@@ -23,9 +23,10 @@ android {
 android.libraryVariants.all { variant ->
     task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
         description "Generates Javadoc for $variant.name."
+        def androidHome = System.getenv('ANDROID_HOME')
         source = variant.javaCompile.source
-        classpath = files(variant.javaCompile.classpath.files) + files("${android.plugin.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
-        options.linksOffline('http://developer.android.com/reference/', "${android.plugin.sdkDirectory}/docs/reference")
+        classpath = files(variant.javaCompile.classpath.files) + files("${androidHome}/platforms/${android.compileSdkVersion}/android.jar")
+        options.linksOffline('http://developer.android.com/reference/', "${androidHome}/docs/reference")
         options.links('http://jcip.net.s3-website-us-east-1.amazonaws.com/annotations/doc/', 'http://twofortyfouram.github.io/android-annotation/')
     }
 }
