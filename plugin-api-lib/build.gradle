@@ -1,8 +1,7 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile group:'net.jcip', name:'jcip-annotations', version:'1.0'
     compile group:'com.android.support', name:'support-annotations', version:'+'
 }
@@ -31,6 +30,10 @@ android.libraryVariants.all { variant ->
     }
 }
 
+group = MAVEN_GROUP
+archivesBaseName = MAVEN_ARTIFACT_NAME
+version = ANDROID_VERSION_NAME
+
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -46,9 +49,6 @@ uploadArchives {
                     }
                 }
             }
-            pom.groupId = MAVEN_GROUP
-            pom.version = ANDROID_VERSION_NAME
-            pom.artifactId = MAVEN_ARTIFACT_NAME
         }
     }
 }
@@ -59,8 +59,5 @@ task installArchives(type: Upload) {
     description "Installs artifacts to mavenLocal."
     repositories.mavenInstaller {
         configuration = configurations.default
-        pom.groupId = MAVEN_GROUP
-        pom.artifactId = MAVEN_ARTIFACT_NAME
-        pom.version = ANDROID_VERSION_NAME
     }
 }
