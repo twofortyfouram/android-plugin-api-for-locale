@@ -3,13 +3,14 @@ jdk: oraclejdk7
 
 android:
   components:
-    - platform-tools
-    - tools
-    - build-tools-20.0.0
+    - platform-tools-21.0.0
+    - tools-23.0.5
+    - build-tools-21.1.0
     
     - android-8
     - android-10
     - android-19
+    - android-21
   licenses:
     - 'android-sdk-license-.*'
 
@@ -27,5 +28,15 @@ before_script:
     - adb shell input keyevent 82 &
 
 script:
-    # Override the default of running connectedCheck, since there are no tests in this project
-    - ./gradlew assemble
+  - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble check findbugs generateReleaseJavadoc
+
+addons:
+  artifacts:
+    key:
+      secure: XDLUH0YtVPZP72A/o8gPBqH3tpaq2wzDn1sS5WWu5R9x+jG/S2BPLiPZ36WU02Pdwr3qU/2HE8T0Nk9wnRbS1xZpui4wZQkUE3KLxzJoOqXsw48WbyjJ9QVl7/hLz2lqSEtvUDL9bi5N6Vhzq+W2jW54uKGxXq4ANDSl7uIP8uE=
+    secret:
+      secure: EF7pPGpxxZdaav8T7cEt4B1/7i+pEZ0Fq1yupNF6YYNONiIjEyGTicqJVWjg+GfY9UfRL9GBNVuH+WohFybsSAu9HTUTnVrb1rgetBExV7ILoXAe8SEd68/UJfzSplVDlAPWie8XWngaBy7v6g0gjyJVprUdfZTCCG4GBsWLDWs=
+    bucket: twofortyfouram.ci.public
+    paths:
+    - $(find . -type f -path "*/build/outputs/*" | tr "\n" ":")
+    - $(find . -type f -path "*/build/docs/*" | tr "\n" ":")

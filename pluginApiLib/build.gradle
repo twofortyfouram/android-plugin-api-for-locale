@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'findbugs'
 apply plugin: 'maven'
 
 dependencies {
@@ -59,5 +60,21 @@ task installArchives(type: Upload) {
     description "Installs artifacts to mavenLocal."
     repositories.mavenInstaller {
         configuration = configurations.default
+    }
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = true
+    classes = fileTree('build/intermediates/classes/release/')
+    source = fileTree('src/main/java/')
+    classpath = files()
+    excludeFilter = file("$rootProject.projectDir/tools/findbugs/android-filter.xml")
+    effort = 'max'
+    reportLevel = 'low'
+    reports {
+        // Only one report type can be enabled at a time, apparently.
+        xml.enabled = false
+        html.enabled = true
+        html.destination = "$project.buildDir/outputs/reports/findbugs/findbugs.html"
     }
 }
