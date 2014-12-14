@@ -1,31 +1,33 @@
 language: android
-jdk: oraclejdk7
+jdk: oraclejdk8
+sudo: false
 
 android:
   components:
-    - platform-tools-21.0.0
-    - tools-23.0.5
-    - build-tools-21.1.0
-    
-    - android-8
-    - android-10
-    - android-19
-    - android-21
+  - platform-tools-21.0.0
+  - tools-24.0.2
+  - build-tools-21.1.2
+
+  - android-8
+  - android-10
+  - android-19
+  - android-21
+
   licenses:
-    - 'android-sdk-license-.*'
+  - 'android-sdk-license-.*'
 
 env:
   matrix:
-    - ANDROID_SDKS=android-8             ANDROID_TARGET=android-8   ANDROID_ABI=armeabi
-    - ANDROID_SDKS=android-10            ANDROID_TARGET=android-10  ANDROID_ABI=armeabi
-    - ANDROID_SDKS=android-19,sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-8             ANDROID_TARGET=android-8   ANDROID_ABI=armeabi
+  - ANDROID_SDKS=android-10            ANDROID_TARGET=android-10  ANDROID_ABI=armeabi
+  - ANDROID_SDKS=android-19,sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
 
 # Emulator Management: Create, Start and Wait
 before_script:
-    - echo no | android create avd --force -n test --target $ANDROID_TARGET --abi $ANDROID_ABI
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+- echo no | android create avd --force -n test --target $ANDROID_TARGET --abi $ANDROID_ABI
+- emulator -avd test -no-skin -no-audio -no-window &
+- android-wait-for-emulator
+- adb shell input keyevent 82 &
 
 script:
   - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble check findbugs generateReleaseJavadoc
