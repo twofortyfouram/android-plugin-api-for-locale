@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath group:'com.android.tools.build', name:'gradle', version:'1.1.2'
@@ -9,7 +9,7 @@ buildscript {
 
 allprojects {
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url 'https://dl.bintray.com/twofortyfouram/maven' }
     }
 
