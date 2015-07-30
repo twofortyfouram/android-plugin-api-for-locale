@@ -3,8 +3,8 @@ apply plugin: 'findbugs'
 apply plugin: 'maven'
 
 dependencies {
-    compile group:'net.jcip', name:'jcip-annotations', version:'1.0'
-    compile group:'com.android.support', name:'support-annotations', version:'+'
+    compile group:'net.jcip', name:'jcip-annotations', version:"${JCIP_ANNOTATION_VERSION_MATCHER}"
+    compile group:'com.android.support', name:'support-annotations', version:"${ANDROID_SUPPORT_ANNOTATION_VERSION_MATCHER}"
 }
 
 android {
