@@ -21,7 +21,7 @@ android {
 }
 
 android.libraryVariants.all { variant ->
-    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+    task("${variant.name}Javadoc", type: Javadoc) {
         description "Generates Javadoc for $variant.name."
         def androidHome = System.getenv('ANDROID_HOME')
         source = variant.javaCompile.source
@@ -61,6 +61,27 @@ task installArchives(type: Upload) {
     repositories.mavenInstaller {
         configuration = configurations.default
     }
+}
+
+// Generates the JavaDoc as a JAR for uploading an artifact
+android.libraryVariants.all { variant ->
+    task("${variant.name}JavadocJar", type: Jar, dependsOn: "${variant.name}Javadoc") {
+        classifier = 'javadoc'
+        from tasks["${variant.name}Javadoc"].destinationDir
+    }
+ 
+    project.artifacts.add('archives', tasks["${variant.name}JavadocJar"]);
+}
+
+
+// Generates the source as a JAR for uploading an artifact
+android.libraryVariants.all { variant ->
+    task("${variant.name}SourceJar", type: Jar) {
+        classifier = 'sources'
+        from variant.javaCompile.source
+    }
+ 
+    project.artifacts.add('archives', tasks["${variant.name}SourceJar"]);
 }
 
 task findbugs(type: FindBugs) {

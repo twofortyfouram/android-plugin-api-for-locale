@@ -16,18 +16,18 @@ The library is compatible and optimized for Android API Level 1 and above.
 
 # Download
 ## Gradle
-The library is published as an artifact to the two forty four a.m. maven repository.  To use the library, the two forty four a.m. maven repository and the artifact need to be added to your build script.
+The library is published as an artifact to jCenter.  To use the library, the jCenter repository and the artifact need to be added to your build script.
 
 The build.gradle repositories section would look something like the following:
 
     repositories {
-        maven { url 'https://dl.bintray.com/twofortyfouram/maven' }
+        jcenter()
     }
 
 And the dependencies section would look something like this:
     
     dependencies {
-             compile group:'com.twofortyfouram', name:'android-plugin-api-for-locale', version:'[1.0.1,2.0['
+        compile group:'com.twofortyfouram', name:'android-plugin-api-for-locale', version:'[1.0.2,2.0['
     }
 
 
@@ -149,3 +149,7 @@ Creating an Intent-based specification is complicated.  This section is intended
 
 #### Execute
 1. An execute Intent for a condition MUST contain an initial result code in the set {[RESULT_CONDITION_SATISFIED](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNSATISFIED), [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN), [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN)}.  If the host knows the previous state of the condition, it SHOULD set the initial result code to that previous state, as this MAY be used by the plug-in to determine its initial value.  If the host does not know the previous state of the condition, it MUST set the initial result code to [RESULT_CONDITION_UNKNOWN](http://twofortyfouram.github.io/android-plugin-api-for-locale/com/twofortyfouram/locale/api/Intent.html#RESULT_CONDITION_UNKNOWN).
+
+# History
+* 1.0.0: Initial release
+* 1.0.2: Reupload artifacts with source and JavaDoc for inclusion in jCenter

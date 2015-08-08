@@ -30,7 +30,7 @@ before_script:
 - adb shell input keyevent 82 &
 
 script:
-  - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble check findbugs generateReleaseJavadoc
+  - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble check findbugs releaseJavadoc
 
 addons:
   artifacts:
