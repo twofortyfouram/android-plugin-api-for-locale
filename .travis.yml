@@ -4,41 +4,39 @@ sudo: false
 
 android:
   components:
-  - platform-tools-22.0.0
-  - tools-24.3.3
-  - build-tools-22.0.1
+    - build-tools-23.0.1
+    - doc # Just the package-list is needed for JavaDoc task; OK to fetch the latest version here.
 
-  - android-8
-  - android-10
-  - android-19
-  - android-22
+    - extra-android-m2repository # Exact version specified in gradle.properties; OK to fetch latest version here.
 
+    - android-8
+    - android-22
+    - sys-img-armeabi-v7a-android-22
+    - android-23
   licenses:
-  - 'android-sdk-license-.*'
+    - 'android-sdk-license-.*'
 
 env:
   matrix:
-  - ANDROID_SDKS=android-8             ANDROID_TARGET=android-8   ANDROID_ABI=armeabi
-  - ANDROID_SDKS=android-10            ANDROID_TARGET=android-10  ANDROID_ABI=armeabi
-  - ANDROID_SDKS=android-19,sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+    # Ideally, the matrix would run against 8, 10, 19, 22, 23.  However that
+    # takes too long and CI builds are flaky enough to make all the different
+    # sets of tests unlikely to succeed.  So the min and max are tested as an
+    # optimization.  Note that android-23 currently hangs in CI, so 22 is tested
+    # instead.
+    - AVD_API_LEVEL=android-8
+    - AVD_API_LEVEL=android-22
 
 # Emulator Management: Create, Start and Wait
 before_script:
-- echo no | android create avd --force -n test --target $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
-- android-wait-for-emulator
-- adb shell input keyevent 82 &
+  - echo no | android create avd --force -n test --target $AVD_API_LEVEL
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - sleep 30
+  - adb shell input keyevent 82 &
 
 script:
-  - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble check findbugs releaseJavadoc
+  - adb logcat > logcat.txt & # write logs to a file, to make test failure debugging easier
+  - TERM=dumb ./gradlew -PIS_PREDEXING_ENABLED=false assemble connectedCheck lint findbugs releaseJavadoc --stacktrace
 
-addons:
-  artifacts:
-    key:
-      secure: XDLUH0YtVPZP72A/o8gPBqH3tpaq2wzDn1sS5WWu5R9x+jG/S2BPLiPZ36WU02Pdwr3qU/2HE8T0Nk9wnRbS1xZpui4wZQkUE3KLxzJoOqXsw48WbyjJ9QVl7/hLz2lqSEtvUDL9bi5N6Vhzq+W2jW54uKGxXq4ANDSl7uIP8uE=
-    secret:
-      secure: EF7pPGpxxZdaav8T7cEt4B1/7i+pEZ0Fq1yupNF6YYNONiIjEyGTicqJVWjg+GfY9UfRL9GBNVuH+WohFybsSAu9HTUTnVrb1rgetBExV7ILoXAe8SEd68/UJfzSplVDlAPWie8XWngaBy7v6g0gjyJVprUdfZTCCG4GBsWLDWs=
-    bucket: twofortyfouram.ci.public
-    paths:
-    - $(find . -type f -path "*/build/outputs/*" | tr "\n" ":")
-    - $(find . -type f -path "*/build/docs/*" | tr "\n" ":")
+after_failure:
+  - cat logcat.txt
