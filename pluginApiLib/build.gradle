@@ -25,9 +25,12 @@ android.libraryVariants.all { variant ->
         description "Generates Javadoc for $variant.name."
         def androidHome = System.getenv('ANDROID_HOME')
         source = variant.javaCompile.source
-        classpath = files(variant.javaCompile.classpath.files) + files("${androidHome}/platforms/${android.compileSdkVersion}/android.jar")
-        options.linksOffline('http://developer.android.com/reference/', "${androidHome}/docs/reference")
-        options.links('http://jcip.net.s3-website-us-east-1.amazonaws.com/annotations/doc/', 'http://twofortyfouram.github.io/android-annotation/')
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        classpath += variant.javaCompile.classpath
+        classpath += variant.javaCompile.outputs.files
+        options.linksOffline('https://developer.android.com/reference/', "${androidHome}/docs/reference")
+        options.links('http://jcip.net.s3-website-us-east-1.amazonaws.com/annotations/doc/')
+        exclude '**/R.java'
     }
 }
 
@@ -84,7 +87,7 @@ android.libraryVariants.all { variant ->
     project.artifacts.add('archives', tasks["${variant.name}SourceJar"]);
 }
 
-task findbugs(type: FindBugs) {
+task findbugs(type: FindBugs, dependsOn: ':pluginApiLib:compileReleaseSources') {
     ignoreFailures = true
     classes = fileTree('build/intermediates/classes/release/')
     source = fileTree('src/main/java/')

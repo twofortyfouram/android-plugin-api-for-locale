@@ -1,9 +1,12 @@
+apply plugin: 'com.github.ben-manes.versions'
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
         classpath group:'com.android.tools.build', name:'gradle', version:"${ANDROID_GRADLE_PLUGIN_VERSION_MATCHER}"
+        classpath group:'com.github.ben-manes', name:'gradle-versions-plugin', version:"${GRADLE_VERSIONS_PLUGIN_VERSION_MATCHER}"
     }
 }
 
@@ -12,18 +15,18 @@ allprojects {
         jcenter()
     }
 
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << '-Xlint:all'
+    // Forces all dependencies to be resolved.  Useful in continuous integration
+    // to populate the dependency cache.
+    // https://discuss.gradle.org/t/download-all-dependencies/6294
+    task resolveAllDependencies {
+        doLast {
+            configurations.all { it.resolve() }
         }
     }
 
-    boolean is_predex = Boolean.parseBoolean(IS_PREDEXING_ENABLED)
-    project.plugins.whenPluginAdded { plugin ->
-        if ('com.android.build.gradle.AppPlugin'.equals(plugin.class.name) && null != plugin.project) {
-            project.android.dexOptions.preDexLibraries = is_predex
-        } else if ('com.android.build.gradle.LibraryPlugin'.equals(plugin.class.name) && null != plugin.project) {
-            project.android.dexOptions.preDexLibraries = is_predex
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << '-Xlint:all'
         }
     }
 }

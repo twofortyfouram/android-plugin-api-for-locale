@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/twofortyfouram/android-plugin-api-for-locale.png?branch=master)](https://travis-ci.org/twofortyfouram/android-plugin-api-for-locale)
+[![CircleCI](https://circleci.com/gh/twofortyfouram/android-plugin-api-for-locale.svg?style=svg)](https://circleci.com/gh/twofortyfouram/android-plugin-api-for-locale)
 
 # Overview
 [Locale](https://play.google.com/store/apps/details?id=com.twofortyfouram.locale) allows developers to create plug-in conditions and settings. Interaction between Locale (host) and plug-ins (client) occurs via an Intent-based API.  This repo contains the definition for that Intent-based API.  The Intent-based API is the lowest level layer of the plug-in API for Locale.

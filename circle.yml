@@ -1,0 +1,40 @@
+# Many CI systems start with the intention of having convention over configuration, and trying to make things look nice and easy to get started.  This can fall apart pretty quickly, if the convention isn't flexible enough or isn't keeping up with the latest developments.  That is what happened here, and this CI configuration is gross.
+# There are a number of custom things happening in this script that deviate from CircleCI's Android documentation.  The reasons are 1. performance and 2. portability between this and some other CI systems we use for other projects.
+# To speed up builds, our own version the Android SDK is downloaded to a separate directory and cached.  This saves about 5 minutes per build.  Updating the preinstalled components is a pain, because we don't want to cache directories that might get overwritten with a new container image later.
+# Note that this doesn't work to prefix the path.  CircleCI adds more crap to the beginning of PATH after we try to define it, including an old version of glcoud.  So each many invocations are prefixed with an override of PATH.
+# machine:
+#  environment:
+#    PATH: "/home/ubuntu/mybin/gcloud/bin:${PATH}"
+
+general:
+  branches:
+    ignore:
+      - gh-pages
+
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    ANDROID_HOME: "/home/ubuntu/mybin/android-sdk-linux"
+
+dependencies:
+  pre:
+    - mkdir -p ~/flags
+    - mkdir -p ~/mybin
+    - ./tools/ci/android-sdk-setup.sh ${ANDROID_HOME} 25.2.5 ~/flags/android-sdk "platforms;android-25" "build-tools;25.0.2" "platform-tools" "docs" "extras;android;m2repository"
+  override:
+    - ./gradlew resolveAllDependencies
+  cache_directories:
+    - ".gradle"
+    - "/home/ubuntu/flags"
+    - "/home/ubuntu/mybin"
+    - "/home/ubuntu/.android"
+
+test:
+  override:
+    - ./gradlew assemble lint findbugs releaseJavadoc dependencyUpdates --profile
+
+
+    - cp -r build/reports/profile $CIRCLE_ARTIFACTS
+    - cp -r build/dependencyUpdates $CIRCLE_ARTIFACTS
+    - cp -r pluginApiLib/build/outputs $CIRCLE_ARTIFACTS
