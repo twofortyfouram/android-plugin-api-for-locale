@@ -21,7 +21,7 @@ dependencies:
   pre:
     - mkdir -p ~/flags
     - mkdir -p ~/mybin
-    - ./tools/ci/android-sdk-setup.sh ${ANDROID_HOME} 25.2.5 ~/flags/android-sdk "tools" "platforms;android-25" "build-tools;25.0.3" "platform-tools" "docs" "extras;android;m2repository"
+    - ./tools/ci/android-sdk-setup.sh ${ANDROID_HOME} 25.2.5 ~/flags/android-sdk "tools" "platforms;android-25" "build-tools;25.0.3" "platform-tools" "docs"
   override:
     - ./gradlew resolveAllDependencies
   cache_directories:
