@@ -1,7 +1,8 @@
-[![CircleCI](https://circleci.com/gh/twofortyfouram/android-plugin-api-for-locale.svg?style=svg)](https://circleci.com/gh/twofortyfouram/android-plugin-api-for-locale)
+# Archived
+This repository has been archived in favor of a new single repository located [here](https://github.com/twofortyfouram/android-monorepo).
 
 # Overview
-[Locale](https://play.google.com/store/apps/details?id=com.twofortyfouram.locale) allows developers to create plug-in conditions and settings. Interaction between Locale (host) and plug-ins (client) occurs via an Intent-based API.  This repo contains the definition for that Intent-based API.  The Intent-based API is the lowest level layer of the plug-in API for Locale.
+[Locale X](https://play.google.com/store/apps/details?id=com.twofortyfouram.locale.x) allows developers to create plug-in conditions and settings. Interaction between Locale (host) and plug-ins (client) occurs via an Intent-based API.  This repo contains the definition for that Intent-based API.  The Intent-based API is the lowest level layer of the plug-in API for Locale.
 
 Although there are multiple ways to approach building a plug-in host or plug-in client, we do not recommend starting with this API layer.  Instead we strongly recommend starting with the main [Plug-in API for Locale](http://www.twofortyfouram.com/developer).
 
